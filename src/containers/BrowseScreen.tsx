@@ -4,15 +4,17 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { Book, State } from '../constants/interfaces';
 
-export const mapStateToProps : any = ({ library }: State) => {
+export const mapStateToProps : any = ({ library, currentBooks }: State) => {
   return {
-    library: library
+    library: library,
+    currentBooks: currentBooks
   }
 }
 
 export const mapDispatchToProps : any = (dispatch: Dispatch<actions.BookAction>) => {
   return {
-    addBook: (book : Book) => dispatch(actions.addBook(book))
+    addBook: (book : Book) => dispatch(actions.addBook(book)),
+    fetchBooks: (query : string) => dispatch(actions.fetchBooks(query))
   }
 }
 

@@ -9,7 +9,8 @@ import { rootReducer } from './reducers';
 const middleware = [logger, thunk];
 
 const initialAppState: State = {
-  library: [{title: 'I am a book', author: 'I am an author', id: 'def'}] 
+  library: [],
+  currentBooks: []
 };
 
 export const Store = createStore(rootReducer, initialAppState, composeWithDevTools(applyMiddleware(...middleware)));

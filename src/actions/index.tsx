@@ -1,6 +1,6 @@
 import * as types from '../constants/types';
-import { Book } from '../constants/interfaces';
-import { identifier } from '@babel/types';
+import { Book, ThunkNoArgs, ThunkWithArgs } from '../constants/interfaces';
+import { Dispatch } from 'redux';
 
 export interface AddBook {
   type: types.ADD_BOOK
@@ -12,7 +12,7 @@ export interface RemoveBook {
   payload: Book
 }
 
-export type BookAction = AddBook | RemoveBook;
+export type BookAction = AddBook | RemoveBook | FetchBooks;
 
 export const addBook = (book : Book) : AddBook => {
   return {
@@ -29,20 +29,34 @@ export const removeBook = (book : Book) : RemoveBook => {
 };
 
 export interface FetchBooks {
-  type: types.REMOVE_BOOK
+  type: types.SET_BROWSE
   payload: Book[]
 }
 
-export type FetchAction = FetchBooks;
+const http = async function<T>(query : string) : Promise<T> {
+     let _url: string = `https://www.googleapis.com/books/v1/volumes?q=${query}&key=AIzaSyCXCJrPhHxBg1MHqv97TKfs3ZbK6YDV1c0`;
+     return new Promise(async resolve => {
+        const response = await fetch(_url)
+        const json = await response.json();
+        const filteredResponse = await json.items.map((book : any) => {
+          let image : string = '';
+          let author : string = '';
+          if (book.imageLinks) {
+            image = book.imageLinks.smallThumbnail;
+          };
+          if (book.volumeInfo.authors[0]) {
+            author = book.volumeInfo.authors[0];
+          }
+          return {title: book.volumeInfo.title, author, id: book.id, image};
+        } )
+        resolve(filteredResponse);
+     })
+  };
 
-export const fetchBooks = async (query : string) : FetchBooks => {
-  const currentSearch : Response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${query}&key=AIzaSyCXCJrPhHxBg1MHqv97TKfs3ZbK6YDV1c0`)
-  const currentSearchParsed = await currentSearch.json();
-  const filteredSearch : Book[] = currentSearchParsed.items.map((book : any) => {
-    return {title: book.volumeInfo.title, author: book.volumeInfo.authors[0], id: book.id, image: book.imageLinks.smallThumbnail};
-  });
-  return {
-    type: types.REMOVE_BOOK,
-    payload: filteredSearch
-  }
-};
+export const fetchBooks : any = (query : string) => async (dispatch : Dispatch) => {
+    const res = await http(query);
+    return dispatch({
+      type: types.SET_BROWSE,
+      payload: res
+    })
+}

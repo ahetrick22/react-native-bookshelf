@@ -1,36 +1,18 @@
+import { ThunkAction } from "redux-thunk";
+import { AnyAction } from "redux";
+
 export interface Book {
   title : string
   author : string,
-  id : string
+  id : string,
+//  image: string | null
 }
 
 export interface State {
-  library : Book[]
+  library : Book[],
+  currentBooks : Book[]
 }
 
+export type ThunkWithArgs<A, P> = (args: A) => ThunkAction<Promise<{ type: string; payload: P }>, State, void, AnyAction>;
 
-export interface IHttpResponse<T> extends Response {
-  parsedBody?: T;
-}
-
-export const http = <T>(request: RequestInfo): Promise<IHttpResponse<T>> => {
-  return new Promise((resolve, reject) => {
-    let response: IHttpResponse<T>;
-    fetch(request)
-      .then(res => {
-        response = res;
-        return res.json();
-      })
-      .then(body => {
-        if (response.ok) {
-          response.parsedBody = body;
-          resolve(response);
-        } else {
-          reject(response);
-        }
-      })
-      .catch(err => {
-        reject(err);
-      });
-  });
-};
+export type ThunkNoArgs<P> = () => ThunkAction<Promise<{ type: string; payload: P }>, State, void, AnyAction>;

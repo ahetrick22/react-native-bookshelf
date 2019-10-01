@@ -3,7 +3,8 @@ import * as types from '../constants/types';
 import { ActionSheetIOS } from 'react-native';
 
 const initialAppState: State = {
-  library: [{title: 'I am a book', author: 'I am an author', id: 'def'}] 
+  library: [{title: 'I am a book', author: 'I am an author', id: 'def'}],
+  currentBooks: []
 };
 
 export const rootReducer = (state: State = initialAppState, { type, payload } : { type: string; payload: any }): State => {
@@ -19,6 +20,8 @@ export const rootReducer = (state: State = initialAppState, { type, payload } : 
           return {...state, library: [...updatedLibrary]};
         }
         return {...state, library: [...state.library, payload]};
+      case types.SET_BROWSE: 
+        return {...state, currentBooks: [...payload]}
       default:
          return state;
    };

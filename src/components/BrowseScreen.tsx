@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   SafeAreaView,
@@ -10,13 +10,23 @@ import {
 } from 'react-native';
 import {HIT_SLOP} from '../constants/hitSlop';
 import { Book } from '../constants/interfaces';
+import BookComponent from './BookComponent';
 
 interface Props {
   addBook : (book : Book) => void,
-  library : Book[]
+  library : Book[],
+  fetchBooks : (query : string) => void,
+  currentBooks : Book[]
 }
 
-const BrowseScreen = ({ addBook, library }: Props) : JSX.Element => {
+const BrowseScreen = ({ addBook, library, fetchBooks, currentBooks }: Props) : JSX.Element => {
+
+  const [query, onChangeValue] = useState("");
+
+  const fetchBooksToBrowse = (queryStr : string) => {
+    onChangeValue(queryStr);
+    fetchBooks(queryStr);
+  }
 
   return (
     <SafeAreaView style={styles.homeScreen}>
@@ -24,10 +34,9 @@ const BrowseScreen = ({ addBook, library }: Props) : JSX.Element => {
         <Text>Browse</Text>
       </View>
       <View style={styles.buttonSection}>
-        <TextInput onChangeText={}></TextInput>
-        <TouchableOpacity style={styles.homeButton} hitSlop={HIT_SLOP} onPress={() => addBook({title: 'Test title', author: 'test author', id: 'abc'})}>
-          <Text style={styles.buttonText}>Add a new book</Text>
-          </TouchableOpacity>
+        <TextInput value={query} placeholder="Search here" onChangeText={(text) => fetchBooksToBrowse(text)}></TextInput>
+       
+          <Text>{currentBooks && currentBooks.length > 0 ? currentBooks.map(book => <View key={book.id}><BookComponent book={book} addBook={addBook}/></View>) : "No books found"}</Text>
       </View>
     </SafeAreaView>
   );
