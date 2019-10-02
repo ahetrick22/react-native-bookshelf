@@ -10,17 +10,17 @@ import {
   NavigationScreenProp,
   NavigationState,
 } from 'react-navigation';
-import {HIT_SLOP} from '../constants/hitSlop';
 import { Book } from '../constants/interfaces';
-import { BookAction } from '../actions';
+import BookComponent from './BookComponent';
 
 interface Props {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>,
-  library : Book[],
-  removeBook : BookAction
+  library : Book[]
+  removeBook : (id : string) => void
+  addBook : (book : Book) => void
 }
 
-const LibraryScreen = ({navigation, library, removeBook}: Props) => {
+const LibraryScreen = ({navigation, library, removeBook, addBook}: Props) => {
 
   return (
     <SafeAreaView style={styles.homeScreen}>
@@ -29,8 +29,8 @@ const LibraryScreen = ({navigation, library, removeBook}: Props) => {
       </View>
       <View style={styles.buttonSection}>
         <Text>Your Library</Text>
-        {library ?
-          library.map(book => <Text key={book.id}>{book.title} by {book.author}</Text>) :
+        {library && library.length > 0 ?
+          library.map(book => <BookComponent book={book} addBook={addBook} removeBook={removeBook}/>) :
           <Text>You have no books yet</Text>}
       </View>
     </SafeAreaView>

@@ -5,7 +5,8 @@ export interface Book {
   title : string
   author : string,
   id : string,
-//  image: string | null
+  image: string,
+  inLibrary: boolean
 }
 
 export interface State {

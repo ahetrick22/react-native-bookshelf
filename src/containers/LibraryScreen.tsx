@@ -12,7 +12,8 @@ export const mapStateToProps : any = ({ library }: State) => {
 
 export const mapDispatchToProps : any = (dispatch: Dispatch<actions.BookAction>) => {
   return {
-    removeBook: (book : Book) => dispatch(actions.removeBook(book))
+    removeBook: (id : string) => dispatch(actions.removeBook(id)),
+    addBook: (book : Book) => dispatch(actions.addBook(book))
   }
 }
 
