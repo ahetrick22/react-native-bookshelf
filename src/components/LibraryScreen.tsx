@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   Text,
   StyleSheet,
+  Dimensions,
 } from 'react-native';
 import {
   NavigationParams,
@@ -30,7 +31,7 @@ const LibraryScreen = ({navigation, library, removeBook, addBook}: Props) => {
       <View style={styles.buttonSection}>
         <Text>Your Library</Text>
         {library && library.length > 0 ?
-          library.map(book => <BookComponent book={book} addBook={addBook} removeBook={removeBook}/>) :
+          library.map(book => <View style={styles.bookComponentView} key={book.id}><BookComponent key={book.id} book={book} addBook={addBook} removeBook={removeBook}/></View>) :
           <Text>You have no books yet</Text>}
       </View>
     </SafeAreaView>
@@ -50,6 +51,12 @@ const styles = StyleSheet.create({
   },
   buttonSection: {
     alignItems: 'center',
+  },
+  bookComponentView: {
+    height: 250,
+    width: Dimensions.get('screen').width*0.9,
+    justifyContent: 'space-around',
+    alignItems: 'center'
   },
 });
 
