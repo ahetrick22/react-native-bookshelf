@@ -37,7 +37,7 @@ export const removeBook = (id : string) : RemoveBook => {
 };
 
 const http = async function<T>(query : string) : Promise<T> {
-     let _url: string = `https://www.googleapis.com/books/v1/volumes?q=${query}&key=AIzaSyCXCJrPhHxBg1MHqv97TKfs3ZbK6YDV1c0`;
+     let _url: string = `https://www.googleapis.com/books/v1/volumes?q=${query}&key=${Config.API_KEY}`;
      return new Promise(async (resolve,reject) => {
         const response = await fetch(_url);
         const json = await response.json();
